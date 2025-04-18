@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 public class ProductController {
@@ -15,6 +16,19 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    //查詢全部商品
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProducts(){
+
+        //並沒有判斷List有沒有物件
+        //因為RESTFUL API設計理念不管裡面有沒有東西，
+        List<Product> productList = productService.getProducts();
+
+        return  ResponseEntity.status(HttpStatus.OK).body(productList);
+
+    }
+
+    //查詢單一商品
     //當前端取得這個路徑，這個方法就會去service拿productId
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId) {

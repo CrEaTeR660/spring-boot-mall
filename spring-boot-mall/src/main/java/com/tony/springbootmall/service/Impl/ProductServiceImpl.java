@@ -1,16 +1,22 @@
 package com.tony.springbootmall.service.Impl;
 
 import com.tony.springbootmall.dao.ProductDao;
-import com.tony.springbootmall.dao.impl.ProductDaoImpl;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 import com.tony.springbootmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ProductServiceImpl implements ProductService {
 
+
+    @Override
+    public List<Product> getProducts() {
+        return productDao.getProducts();
+    }
 
     @Autowired
     private ProductDao productDao;
@@ -36,4 +42,6 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Integer productId) {
         productDao.deleteProduct(productId);
     }
+
+
 }
