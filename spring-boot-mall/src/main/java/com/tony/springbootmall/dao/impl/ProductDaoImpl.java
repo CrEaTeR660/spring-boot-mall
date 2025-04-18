@@ -66,4 +66,47 @@ public class ProductDaoImpl implements ProductDao {
 
         return productId;
     }
+
+
+    //起始時間不用動，只要動最齁修改時間就好
+    @Override
+    public void updateProduct(Integer productId, ProductRequest productRequest) {
+
+        String sql = "UPDATE product SET " +
+                "product_name = :productName, " +
+                "category = :category, " +
+                "image_url = :imageUrl, " +
+                "price = :price, " +
+                "stock = :stock, " +
+                "description = :description, " +
+                "last_modified_date = :last_modified_date " +
+                "WHERE product_id = :productId";
+
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+
+        map.put("productName", productRequest.getProductName());
+        map.put("category", productRequest.getCategory().toString());
+        map.put("imageUrl", productRequest.getImageUrl());
+        map.put("price", productRequest.getPrice());
+        map.put("stock", productRequest.getStock());
+        map.put("description", productRequest.getDescription());
+
+        map.put("last_modified_date", new Date());
+
+        namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    @Override
+    public void deleteProduct(Integer productId) {
+        String sql = "DELETE FROM product WHERE product_id = :productId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+
+        namedParameterJdbcTemplate.update(sql, map);
+    }
+
 }

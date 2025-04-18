@@ -42,4 +42,34 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
+    //修改商品
+    @PutMapping("products/{productId}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
+                                                 @RequestBody @Valid ProductRequest productRequest) {
+
+        //檢查product是否存在
+        Product product = productService.getProductById(productId);//取得商品數據
+
+        //如果商品是null，要給前端404
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        //修改商品數據
+        productService.updateProduct(productId,productRequest);
+
+        Product updateProduct = productService.getProductById(productId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
+    }
+
+    //刪除商品(只要確定商品消失就直接回傳，不用回傳404)
+    //商品存在，成功的刪除/商品本來就不存在
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
+
+        productService.deleteProduct(productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //204 NoContent已刪除內容
+    }
+
 }

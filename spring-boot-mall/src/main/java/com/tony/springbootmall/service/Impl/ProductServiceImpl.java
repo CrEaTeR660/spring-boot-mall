@@ -1,6 +1,7 @@
 package com.tony.springbootmall.service.Impl;
 
 import com.tony.springbootmall.dao.ProductDao;
+import com.tony.springbootmall.dao.impl.ProductDaoImpl;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 import com.tony.springbootmall.service.ProductService;
@@ -16,7 +17,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Integer productId) {
-    return productDao.getProductById(productId);
+        return productDao.getProductById(productId);
     }
 
     @Override
@@ -24,5 +25,15 @@ public class ProductServiceImpl implements ProductService {
 
 
         return productDao.createProduct(productRequest);
+    }
+
+    @Override
+    public void updateProduct(Integer productId, ProductRequest productRequest) {
+        productDao.updateProduct(productId, productRequest);
+    }
+
+    @Override
+    public void deleteProduct(Integer productId) {
+        productDao.deleteProduct(productId);
     }
 }
