@@ -1,5 +1,7 @@
 package com.tony.springbootmall.controller;
 
+import com.tony.springbootmall.constant.ProductCategory;
+import com.tony.springbootmall.dto.ProductQueryParams;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 import com.tony.springbootmall.service.ProductService;
@@ -18,11 +20,21 @@ public class ProductController {
 
     //查詢全部商品
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
+    public ResponseEntity<List<Product>> getProducts(
+            //添加搜尋條件，使用商品分類去搜尋
+            //在url取得請求參數，category類別
+            @RequestParam(required = false)ProductCategory category,
+            @RequestParam(required = false)String search
+    ){
+        //如果要增加搜尋條件只要在ProductQueryParams dto增加條件就好
+        ProductQueryParams params = new ProductQueryParams();
+        params.setCategory(category);
+        params.setSearch(search);
+
 
         //並沒有判斷List有沒有物件
         //因為RESTFUL API設計理念不管裡面有沒有東西，
-        List<Product> productList = productService.getProducts();
+        List<Product> productList = productService.getProducts(params);
 
         return  ResponseEntity.status(HttpStatus.OK).body(productList);
 

@@ -1,5 +1,7 @@
 package com.tony.springbootmall.service;
 
+import com.tony.springbootmall.constant.ProductCategory;
+import com.tony.springbootmall.dto.ProductQueryParams;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 
@@ -8,8 +10,8 @@ import java.util.List;
 public interface
 ProductService {
 
-    //查詢全部
-    List<Product> getProducts();
+    //查詢全部  (後面參數設定查詢條件)
+    List<Product> getProducts(ProductQueryParams params);
 
     //單一查詢
     Product getProductById(Integer productId);

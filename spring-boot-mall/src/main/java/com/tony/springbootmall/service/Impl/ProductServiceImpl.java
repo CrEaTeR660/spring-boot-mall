@@ -1,6 +1,7 @@
 package com.tony.springbootmall.service.Impl;
 
 import com.tony.springbootmall.dao.ProductDao;
+import com.tony.springbootmall.dto.ProductQueryParams;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 import com.tony.springbootmall.service.ProductService;
@@ -12,10 +13,11 @@ import java.util.List;
 @Component
 public class ProductServiceImpl implements ProductService {
 
-
+    //取得商品類型
     @Override
-    public List<Product> getProducts() {
-        return productDao.getProducts();
+    public List<Product> getProducts(ProductQueryParams params) {
+
+        return productDao.getProducts(params);
     }
 
     @Autowired

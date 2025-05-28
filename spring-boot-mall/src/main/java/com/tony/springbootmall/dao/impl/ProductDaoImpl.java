@@ -1,6 +1,8 @@
 package com.tony.springbootmall.dao.impl;
 
+import com.tony.springbootmall.constant.ProductCategory;
 import com.tony.springbootmall.dao.ProductDao;
+import com.tony.springbootmall.dto.ProductQueryParams;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 import com.tony.springbootmall.rowmapper.ProductRowMapper;
@@ -23,15 +25,30 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    //查詢全部商品
+    //查詢全部商品  ProductCategory(設定查詢條件)
     @Override
-    public List<Product> getProducts() {
+    public List<Product> getProducts(ProductQueryParams params) {
+        //where 1= 1 最主要的理由是要自由的拼接category的值
+        //如果是空值1=1也不會影響
         String sql = "select product_id,product_name, category, image_url, price, stock, description, created_date, last_modified_date " +
-                "from product";
+                "from product"
+                + " where 1 = 1 ";
 
         Map<String,Object> map = new HashMap<>();
+        //假如類別裡不是空值，加進去map裡，因加上where1=1
+        //所以我之後如果加上and...就可以變動態的
+        //假如前端的URL參數/products?category= FOOD，就會被丟進來
+        if (params.getCategory() != null) {
+            sql = sql + " AND category = :category";
+            map.put("category", params.getCategory().name()); //因為這類型是enum類型所以要轉型toString
 
-        List<Product> productList = namedParameterJdbcTemplate.query(sql, new ProductRowMapper());
+        }
+        if(params.getSearch() != null){
+            sql = sql + " AND product_name Like :search";
+            map.put("search", "%" + params.getSearch() + "%");
+        }
+
+        List<Product> productList = namedParameterJdbcTemplate.query(sql,map, new ProductRowMapper());
         return productList;
     }
 
