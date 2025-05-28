@@ -2,9 +2,6 @@ package com.tony.springbootmall.dto;
 
 import com.tony.springbootmall.constant.ProductCategory;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.lang.NonNull;
-
-import java.util.Date;
 
 public class ProductRequest {
 

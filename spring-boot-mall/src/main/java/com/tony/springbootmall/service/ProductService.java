@@ -13,6 +13,9 @@ ProductService {
     //查詢全部  (後面參數設定查詢條件)
     List<Product> getProducts(ProductQueryParams params);
 
+    //計算商品總比數
+    Integer countProducts(ProductQueryParams params);
+
     //單一查詢
     Product getProductById(Integer productId);
     //新增商品

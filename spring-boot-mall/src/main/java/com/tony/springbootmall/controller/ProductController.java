@@ -5,6 +5,7 @@ import com.tony.springbootmall.dto.ProductQueryParams;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 import com.tony.springbootmall.service.ProductService;
+import com.tony.springbootmall.util.Page;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -23,9 +24,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    //查詢全部商品
+    //查詢全部商品，也要計算商品總比數是多少
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             //添加搜尋條件，使用商品分類去搜尋
             //在url取得請求參數，category類別
             //required = false是可有可無，url會變products=?
@@ -57,7 +58,18 @@ public class ProductController {
         //因為RESTFUL API設計理念不管裡面有沒有東西，
         List<Product> productList = productService.getProducts(params);
 
-        return  ResponseEntity.status(HttpStatus.OK).body(productList);
+        //取得product，商品總數
+        Integer total = productService.countProducts(params);//之所以參數放params，是因為會根據查詢條件不同而改變
+
+        //分頁(設定responseBody的值)
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResult(productList);
+
+
+        return  ResponseEntity.status(HttpStatus.OK).body(page);
 
     }
 

@@ -20,6 +20,12 @@ public class ProductServiceImpl implements ProductService {
         return productDao.getProducts(params);
     }
 
+    //算商品總數
+    @Override
+    public Integer countProducts(ProductQueryParams params) {
+        return productDao.countProducts(params);
+    }
+
     @Autowired
     private ProductDao productDao;
 

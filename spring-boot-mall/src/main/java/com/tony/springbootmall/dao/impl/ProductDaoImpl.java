@@ -26,6 +26,23 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
+    @Override
+    public Integer countProducts(ProductQueryParams params) {
+        //1=1，是為了拼接後面的sql語句
+        String sql = "select count(*) from product where 1=1 ";
+
+        //也是為了拼接查詢條件，比如說是根據類別還是根據搜尋比對去實作
+        Map<String, Object> map = new HashMap<>();
+
+        //實作查詢條件
+        sql = addFilteringSql(sql, map, params);
+
+        //把count的值去做轉換成Integer的值
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return total;
+
+    }
+
     //查詢全部商品  ProductCategory(設定查詢條件)
     @Override
     public List<Product> getProducts(ProductQueryParams params) {
@@ -36,19 +53,12 @@ public class ProductDaoImpl implements ProductDao {
                 + " where 1 = 1 ";
 
         Map<String, Object> map = new HashMap<>();
-        //實作查詢條件
+
         //假如類別裡不是空值，加進去map裡，因加上where1=1
         //所以我之後如果加上and...就可以變動態的
         //假如前端的URL參數/products?category= FOOD，就會被丟進來
-        if (params.getCategory() != null) {
-            sql = sql + " AND category = :category ";
-            map.put("category", params.getCategory().name()); //因為這類型是enum類型所以要轉型toString
-
-        }
-        if (params.getSearch() != null) {
-            sql = sql + " AND product_name Like :search ";
-            map.put("search", "%" + params.getSearch() + "%");
-        }
+        //實作查詢條件
+        sql = addFilteringSql(sql, map, params);
 
         //排序
         //在後面直接拼接查詢條件，不用加判斷是否為null，是因為Controller層已經給defaultValue
@@ -58,6 +68,8 @@ public class ProductDaoImpl implements ProductDao {
         sql = sql + " limit :limit OFFSET :offset ";
         map.put("limit", params.getLimit());
         map.put("offset", params.getOffset());
+
+
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
         return productList;
@@ -148,6 +160,24 @@ public class ProductDaoImpl implements ProductDao {
         map.put("productId", productId);
 
         namedParameterJdbcTemplate.update(sql, map);
+    }
+
+
+    //根據傳進來的參數拼接，把這段程式抽出來成獨立方法
+    private String addFilteringSql(String sql, Map map, ProductQueryParams params) {
+
+        if (params.getCategory() != null) {
+            sql = sql + " AND category = :category ";
+            map.put("category", params.getCategory().name()); //因為這類型是enum類型所以要轉型toString
+
+        }
+        if (params.getSearch() != null) {
+            sql = sql + " AND product_name Like :search ";
+            map.put("search", "%" + params.getSearch() + "%");
+        }
+
+        return sql;
+
     }
 
 }

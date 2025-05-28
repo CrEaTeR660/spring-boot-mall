@@ -1,6 +1,5 @@
 package com.tony.springbootmall.dao;
 
-import com.tony.springbootmall.constant.ProductCategory;
 import com.tony.springbootmall.dto.ProductQueryParams;
 import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
@@ -11,6 +10,9 @@ public interface ProductDao {
 
      //查詢(設定查詢條件)
      List<Product> getProducts(ProductQueryParams params);
+
+     //計算商品總數
+     Integer countProducts(ProductQueryParams params);
 
      Product getProductById(Integer productId);
 
