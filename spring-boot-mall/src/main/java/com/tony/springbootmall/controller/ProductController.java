@@ -6,12 +6,17 @@ import com.tony.springbootmall.dto.ProductRequest;
 import com.tony.springbootmall.model.Product;
 import com.tony.springbootmall.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+//加這個註解max跟min才會生效
+@Validated
 @RestController
 public class ProductController {
 
@@ -30,7 +35,14 @@ public class ProductController {
             //假如沒有傳orderBy參數過來，用created_date去查
             @RequestParam (defaultValue = "created_date") String orderBy,
             //sort決定用小排到大，還是用大排到小
-            @RequestParam (defaultValue = "desc") String sort
+            @RequestParam (defaultValue = "desc") String sort,
+
+            //分頁 Pagination(limit取得幾筆數據，offset跳過多少參數)
+            //預設取得五筆參數(不跳過任何一筆數據)
+            //用defaultValue(限制)筆數，對資料庫效能比較好(比如說用*就對效能不好)
+            //Max,Min避免超過1000跟低於0
+            @RequestParam (defaultValue = "5")@Max(1000) @Min(0) Integer limit,
+            @RequestParam (defaultValue = "0")@Min(0) Integer offset
     ){
         //如果要增加搜尋條件只要在ProductQueryParams dto增加條件就好
         ProductQueryParams params = new ProductQueryParams();
@@ -38,6 +50,8 @@ public class ProductController {
         params.setSearch(search);
         params.setOrderBy(orderBy);
         params.setSort(sort);
+        params.setLimit(limit);
+        params.setOffset(offset);
 
         //並沒有判斷List有沒有物件
         //因為RESTFUL API設計理念不管裡面有沒有東西，

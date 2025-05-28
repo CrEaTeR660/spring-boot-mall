@@ -35,7 +35,8 @@ public class ProductDaoImpl implements ProductDao {
                 " from product "
                 + " where 1 = 1 ";
 
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+        //實作查詢條件
         //假如類別裡不是空值，加進去map裡，因加上where1=1
         //所以我之後如果加上and...就可以變動態的
         //假如前端的URL參數/products?category= FOOD，就會被丟進來
@@ -44,13 +45,19 @@ public class ProductDaoImpl implements ProductDao {
             map.put("category", params.getCategory().name()); //因為這類型是enum類型所以要轉型toString
 
         }
-        if(params.getSearch() != null){
+        if (params.getSearch() != null) {
             sql = sql + " AND product_name Like :search ";
             map.put("search", "%" + params.getSearch() + "%");
         }
-        //在後面直接拼接查詢條件，不用加判斷是否為null，是因為Controller層已經給defaultValue
-        sql = sql + " order by " + params.getOrderBy() + " " + params.getSort();
 
+        //排序
+        //在後面直接拼接查詢條件，不用加判斷是否為null，是因為Controller層已經給defaultValue
+        sql = sql + " ORDER BY " + params.getOrderBy() + " " + params.getSort();
+
+        //分頁
+        sql = sql + " limit :limit OFFSET :offset ";
+        map.put("limit", params.getLimit());
+        map.put("offset", params.getOffset());
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
         return productList;
@@ -78,7 +85,7 @@ public class ProductDaoImpl implements ProductDao {
     public Integer createProduct(ProductRequest productRequest) {
 
         String sql = "INSERT INTO product(product_name, category, image_url, price, stock, description, created_date,last_modified_date) " +
-                "values (:productName, :category, :imageUrl, :price, :stock, :description, :created_date, :last_modified_date) " ;
+                "values (:productName, :category, :imageUrl, :price, :stock, :description, :created_date, :last_modified_date) ";
 
         Map<String, Object> map = new HashMap<>();
         map.put("productName", productRequest.getProductName());
@@ -116,7 +123,6 @@ public class ProductDaoImpl implements ProductDao {
                 "description = :description, " +
                 "last_modified_date = :last_modified_date " +
                 "WHERE product_id = :productId";
-
 
 
         Map<String, Object> map = new HashMap<>();

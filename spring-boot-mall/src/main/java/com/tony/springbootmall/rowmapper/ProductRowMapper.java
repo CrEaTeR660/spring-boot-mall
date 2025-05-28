@@ -8,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+//把 ResultSet → Java Bean（VO/DTO）
+//將資料庫查詢結果一列，轉成一個 Java 物件
+
 public class ProductRowMapper implements RowMapper<Product> {
 
     @Override

@@ -11,8 +11,31 @@ public class ProductQueryParams {
     // 未來可加：
     // private Integer priceMin;
     // private Integer priceMax;
+
     private String orderBy;
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    //由大到小搜尋還是小到大
     private String sort;
+
+    //頁數
+    private Integer limit;
+    private Integer offset;
 
     public String getOrderBy() {
         return orderBy;
