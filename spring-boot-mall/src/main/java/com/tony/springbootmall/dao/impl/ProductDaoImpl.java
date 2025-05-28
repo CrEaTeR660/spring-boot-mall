@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ProductDaoImpl implements ProductDao {
         //where 1= 1 最主要的理由是要自由的拼接category的值
         //如果是空值1=1也不會影響
         String sql = "select product_id,product_name, category, image_url, price, stock, description, created_date, last_modified_date " +
-                "from product"
+                " from product "
                 + " where 1 = 1 ";
 
         Map<String,Object> map = new HashMap<>();
@@ -39,16 +40,19 @@ public class ProductDaoImpl implements ProductDao {
         //所以我之後如果加上and...就可以變動態的
         //假如前端的URL參數/products?category= FOOD，就會被丟進來
         if (params.getCategory() != null) {
-            sql = sql + " AND category = :category";
+            sql = sql + " AND category = :category ";
             map.put("category", params.getCategory().name()); //因為這類型是enum類型所以要轉型toString
 
         }
         if(params.getSearch() != null){
-            sql = sql + " AND product_name Like :search";
+            sql = sql + " AND product_name Like :search ";
             map.put("search", "%" + params.getSearch() + "%");
         }
+        //在後面直接拼接查詢條件，不用加判斷是否為null，是因為Controller層已經給defaultValue
+        sql = sql + " order by " + params.getOrderBy() + " " + params.getSort();
 
-        List<Product> productList = namedParameterJdbcTemplate.query(sql,map, new ProductRowMapper());
+
+        List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
         return productList;
     }
 
@@ -84,7 +88,8 @@ public class ProductDaoImpl implements ProductDao {
         map.put("stock", productRequest.getStock());
         map.put("description", productRequest.getDescription());
 
-        Date now = new Date();
+
+        LocalDateTime now = LocalDateTime.now();
         map.put("created_date", now);
         map.put("last_modified_date", now);
 
@@ -124,7 +129,7 @@ public class ProductDaoImpl implements ProductDao {
         map.put("stock", productRequest.getStock());
         map.put("description", productRequest.getDescription());
 
-        map.put("last_modified_date", new Date());
+        map.put("last_modified_date", LocalDateTime.now());
 
         namedParameterJdbcTemplate.update(sql, map);
     }

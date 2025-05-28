@@ -11,7 +11,24 @@ public class ProductQueryParams {
     // 未來可加：
     // private Integer priceMin;
     // private Integer priceMax;
+    private String orderBy;
+    private String sort;
 
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
 
     public ProductCategory getCategory() {
         return category;

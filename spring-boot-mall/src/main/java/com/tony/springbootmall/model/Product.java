@@ -2,7 +2,9 @@ package com.tony.springbootmall.model;
 
 import com.tony.springbootmall.constant.ProductCategory;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 
 public class Product {
     //商品ID
@@ -22,16 +24,17 @@ public class Product {
 
     //商品創建時間
     //Date類型是對照格林威治的時間
-    private Date createDate;
+
+    private LocalDateTime createDate;
     //商品最後修改時間
-    private Date lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
 
     public Product() {
     }
 
 
-    public Product(Integer productId, String productName, ProductCategory category, String imageUrl, Integer price, Integer stock, String description, Date createDate, Date lastModifiedDate) {
+    public Product(Integer productId, String productName, ProductCategory category, String imageUrl, Integer price, Integer stock, String description, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
         this.productId = productId;
         this.productName = productName;
         this.category = category;
@@ -98,19 +101,19 @@ public class Product {
         this.description = description;
     }
 
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDateTime	createDate) {
         this.createDate = createDate;
     }
 
-    public Date getLastModifiedDate() {
+    public LocalDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

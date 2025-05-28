@@ -23,14 +23,21 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProducts(
             //添加搜尋條件，使用商品分類去搜尋
             //在url取得請求參數，category類別
-            @RequestParam(required = false)ProductCategory category,
-            @RequestParam(required = false)String search
+            //required = false是可有可無，url會變products=?
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search,
+            //控制排序sorting
+            //假如沒有傳orderBy參數過來，用created_date去查
+            @RequestParam (defaultValue = "created_date") String orderBy,
+            //sort決定用小排到大，還是用大排到小
+            @RequestParam (defaultValue = "desc") String sort
     ){
         //如果要增加搜尋條件只要在ProductQueryParams dto增加條件就好
         ProductQueryParams params = new ProductQueryParams();
         params.setCategory(category);
         params.setSearch(search);
-
+        params.setOrderBy(orderBy);
+        params.setSort(sort);
 
         //並沒有判斷List有沒有物件
         //因為RESTFUL API設計理念不管裡面有沒有東西，
